@@ -977,7 +977,7 @@ def find_uv_layer_index( uvname, material=None ):
     return idx
 
 def has_custom_property( a, name ):
-    for prop in a.items():
+    for prop in list(a.items()):
         n,val = prop
         if n == name:
             return True
@@ -2376,7 +2376,7 @@ def _mesh_entity_helper( doc, ob, o ):
 
     mesh = ob.data
     # custom user props
-    for prop in mesh.items():
+    for prop in list(mesh.items()):
         propname, propvalue = prop
         if not propname.startswith('_'):
             user = doc.createElement('user_data')
@@ -3644,7 +3644,7 @@ class _OgreCommonExport_(_TXML_):
         scn.setAttribute('formatVersion', '1.0.1')
         bscn = bpy.context.scene
 
-        if '_previous_export_time_' in bscn.keys():
+        if '_previous_export_time_' in list(bscn.keys()):
             scn.setAttribute('previous_export_time', str(bscn['_previous_export_time_']))
         else:
             scn.setAttribute('previous_export_time', '0')
@@ -3698,7 +3698,7 @@ class _OgreCommonExport_(_TXML_):
         xmlparent.appendChild(o)
 
         # Custom user props
-        for prop in ob.items():
+        for prop in list(ob.items()):
             propname, propvalue = prop
             if not propname.startswith('_'):
                 user = doc.createElement('user_data')
@@ -6756,7 +6756,7 @@ class OgreMaterialScript(object):
 
         #print( self.techniques )
         self.hidden_texture_units = rem = []
-        for tex in self.texture_units.values():
+        for tex in list(self.texture_units.values()):
             if 'texture' not in tex['params']:
                 rem.append( tex )
         for tex in rem:
@@ -7360,7 +7360,7 @@ def get_shader_program( name ):
         print('WARNING: no shader program named: %s' %name)
 
 def get_shader_programs():
-    return OgreProgram.PROGRAMS.values()
+    return list(OgreProgram.PROGRAMS.values())
 
 def parse_material_and_program_scripts( path, scripts, progs, missing ):   # recursive
     for name in os.listdir(path):

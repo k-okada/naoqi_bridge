@@ -284,7 +284,7 @@ class Inertial(object):
         xml.appendChild(short(doc, "mass", "value", self.mass))
 
         inertia = doc.createElement("inertia")
-        for (n, v) in self.matrix.items():
+        for (n, v) in list(self.matrix.items()):
             set_attribute(inertia, n, v)
         xml.appendChild(inertia)
 
@@ -1016,7 +1016,7 @@ class URDF(object):
 
         # Post-processing to add offsetfrom statements
 
-        for j in self.joints.keys():
+        for j in list(self.joints.keys()):
             for l in kinbody.getElementsByTagName('body'):
                 if l.getAttribute('name') == self.joints[j].child:
                     # Add offsetfrom declarration and joint anchor as transform
@@ -1025,14 +1025,14 @@ class URDF(object):
                     break
 
         # Add adjacencies
-        for j in self.joints.values():
+        for j in list(self.joints.values()):
             kinbody.appendChild(create_element(doc, "adjacent", [j.parent, j.child]))
 
         # Add known extra adjacencies
         badjoints = {'LAR': 'LKP', 'LWR': 'LWY', 'LSY': 'LSP', 'LHY': 'LHP',
                      'RAR': 'RKP', 'RWR': 'RWY', 'RSY': 'RSP', 'RHY': 'RHP',
                      'NK1': 'Torso'}
-        for k, v in badjoints.items():
+        for k, v in list(badjoints.items()):
             # TODO: search all bodies for above pairs and add extra adjacency tags
             b1 = None
             b2 = None
@@ -1092,21 +1092,21 @@ class URDF(object):
         if len(self.links) == 0:
             s += "None\n"
         else:
-            for k, v in self.links.iteritems():
+            for k, v in list(self.links.items()):
                 s += "- Link '{0}':\n{1}\n".format(k, reindent(str(v), 1))
         s += "\n"
         s += "Joints:\n"
         if len(self.joints) == 0:
             s += "None\n"
         else:
-            for k, v in self.joints.iteritems():
+            for k, v in list(self.joints.items()):
                 s += "- Joint '{0}':\n{1}\n".format(k, reindent(str(v), 1))
         s += "\n"
         s += "Materials:\n"
         if len(self.materials) == 0:
             s += "None\n"
         else:
-            for k, v in self.materials.iteritems():
+            for k, v in list(self.materials.items()):
                 s += "- Material '{0}':\n{1}\n".format(k, reindent(str(v), 1))
 
         return s
@@ -1130,7 +1130,7 @@ class URDF(object):
         self.links[link].name = newlink
         self.links[newlink] = self.links[link]
         self.links.pop(link)
-        for k, v in self.parent_map.items():
+        for k, v in list(self.parent_map.items()):
             if k == link:
                 self.parent_map[newlink] = v
                 self.parent_map.pop(k)
@@ -1142,7 +1142,7 @@ class URDF(object):
                 new1 = newlink
                 v = (v[0], new1)
             self.parent_map[k] = v
-        for k, v in self.child_map.items():
+        for k, v in list(self.child_map.items()):
             if k == link:
                 self.child_map[newlink] = v
                 self.child_map.pop(k)
@@ -1154,7 +1154,7 @@ class URDF(object):
                 vnew.append(el)
             # print(vnew)
             self.child_map[k] = vnew
-        for n, j in self.joints.items():
+        for n, j in list(self.joints.items()):
             if j.parent == link:
                 j.parent = newlink
             if j.child == link:
@@ -1168,7 +1168,7 @@ class URDF(object):
         self.joints[joint].name = newjoint
         self.joints[newjoint] = self.joints[joint]
         self.joints.pop(joint)
-        for k, v in self.child_map.items():
+        for k, v in list(self.child_map.items()):
             vnew = []
             for el in v:
                 if el[0] == joint:
@@ -1176,12 +1176,12 @@ class URDF(object):
                 print(el)
                 vnew.append(el)
             self.child_map[k] = vnew
-        for k, v in self.parent_map.items():
+        for k, v in list(self.parent_map.items()):
             if v[0] == joint:
                 v = (newjoint, v[1])
             print(el)
             self.parent_map[k] = v
-        for n, j in self.joints.items():
+        for n, j in list(self.joints.items()):
             if j.mimic is not None:
                 j.mimic.joint_name = newjoint if j.mimic.joint_name == joint else j.mimic.joint_name
 
@@ -1286,7 +1286,7 @@ class URDF(object):
 
     def update_mesh_paths(self, package_name):
         """Search and replace package paths in urdf with chosen package name"""
-        for n, l in self.links.items():
+        for n, l in list(self.links.items()):
             # TODO: check if mesh
             for g in [l.collision.geometry, l.visual.geometry]:
                 # save STL file name only
@@ -1298,7 +1298,7 @@ class URDF(object):
 
     def apply_default_limits(self, effort, vel, lower, upper, mask=None):
         """Apply default limits to all joints and convert continous joints to revolute. Ignores fixed and other joint types."""
-        for n, j in self.joints.items():
+        for n, j in list(self.joints.items()):
             if mask is None or re.search(mask, n):
                 if j.joint_type == Joint.CONTINUOUS or j.joint_type == Joint.REVOLUTE:
                     j.limits = JointLimit(effort, vel, lower, upper)

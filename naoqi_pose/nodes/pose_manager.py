@@ -70,7 +70,7 @@ class PoseManager():
             self.stopWalkSrv = None
             self.poseServer.start()
 
-            rospy.loginfo("pose_manager running, offering poses: %s", self.poseLibrary.keys());
+            rospy.loginfo("pose_manager running, offering poses: %s", list(self.poseLibrary.keys()));
 
         else:
             rospy.logfatal("Could not connect to required \"joint_trajectory\" action server, is the nao_controller node running?");
@@ -84,16 +84,16 @@ class PoseManager():
             rospy.logwarn("Error while parsing the XAP file: %s" % str(re))
             return
 
-        for name, pose in poses.items():
+        for name, pose in list(poses.items()):
 
             trajectory = JointTrajectory()
 
-            trajectory.joint_names = pose.keys()
-            joint_values = pose.values()
+            trajectory.joint_names = list(pose.keys())
+            joint_values = list(pose.values())
 
             point = JointTrajectoryPoint()
             point.time_from_start = Duration(2.0) # hardcoded duration!
-            point.positions = pose.values()
+            point.positions = list(pose.values())
             trajectory.points = [point]
 
             self.poseLibrary[name] = trajectory
@@ -107,7 +107,7 @@ class PoseManager():
 
         poses = rospy.get_param('~poses', None)
         if poses:
-            for key,value in poses.iteritems():
+            for key,value in list(poses.items()):
                 try:
                 # TODO: handle multiple points in trajectory
                     trajectory = JointTrajectory()
@@ -136,7 +136,7 @@ class PoseManager():
             self.poseLibrary["crouch"] = trajectory;
 
 
-        rospy.loginfo("Loaded %d poses: %s", len(self.poseLibrary), self.poseLibrary.keys())
+        rospy.loginfo("Loaded %d poses: %s", len(self.poseLibrary), list(self.poseLibrary.keys()))
 
 
     def executeBodyPose(self, goal):

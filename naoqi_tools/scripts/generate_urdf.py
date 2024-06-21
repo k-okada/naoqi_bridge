@@ -118,7 +118,7 @@ def REP120_compatibility():
             robot.joints[joint].child = LINKS_DICO[robot.joints[joint].child]
         except KeyError:
             pass
-        for link in robot.links.keys():
+        for link in list(robot.links.keys()):
             try:
                 robot.rename_link(link, LINKS_DICO[link])
             except KeyError as ValueError:
@@ -158,9 +158,9 @@ def REP120_compatibility():
 
         # rename the laser frames to sensor frames
         # (they are actually not used for computation)
-        laser_links = [c for c in robot.links.keys()
+        laser_links = [c for c in list(robot.links.keys())
             if 'surrounding' in c.lower()]
-        for joint in robot.joints.values():
+        for joint in list(robot.joints.values()):
             if joint.child in laser_links:
                 laser_frame = joint.child
                 laser_device_frame = laser_frame[:-5] + 'device_frame'
@@ -195,7 +195,7 @@ def REP120_compatibility():
                 robot.add_joint(joint_new)
 
     # add an optical frame for each robot
-    camera_frames = [c for c in robot.links.keys() if 'camera' in c.lower()]
+    camera_frames = [c for c in list(robot.links.keys()) if 'camera' in c.lower()]
     for camera_frame in camera_frames:
         camera_optical_frame = camera_frame[:-6] + '_optical_frame'
         robot.add_link(ur.Link(camera_optical_frame))
@@ -400,7 +400,7 @@ def export_robot_to_xacro_files():
     root.appendChild(ur.short(doc, 'xacro:include', 'filename', NAME +
         '_visual_collisions.xacro'))
     create_visual_xacro()
-    for i in XACRO_DICO.keys():
+    for i in list(XACRO_DICO.keys()):
         print('exporting ' + NAME + '_' + i + '.xacro')
         if i.find('eye') != -1:
             export_kinematic_chain_to_xacro(i, 'HeadRoll_link',
@@ -588,7 +588,7 @@ def adjustMeshPath(path_mesh_pkg, link):
     if robot.links[link].visual is not None:
         try:
             meshname = str(
-                LINKS_DICO.keys()[list(LINKS_DICO.values()).index(link)])
+                list(LINKS_DICO.keys())[list(LINKS_DICO.values()).index(link)])
             if meshname.endswith('_link'):
                 meshfile = meshname[0:-5]
             else:
