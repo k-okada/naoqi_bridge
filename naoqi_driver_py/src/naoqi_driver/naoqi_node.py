@@ -34,7 +34,10 @@ import rospy
 try:
     from naoqi import ALProxy
 except ImportError:
-    raise RuntimeError("Error importing NaoQI. Please make sure that Aldebaran's NaoQI API is in your PYTHONPATH.")
+    try:
+        import qi
+    except ImportError:
+        raise RuntimeError("Error importing NaoQI. Please make sure that Aldebaran's NaoQI API is in your PYTHONPATH.")
 
 class NaoqiNode(Thread):
     """
@@ -73,6 +76,9 @@ class NaoqiNode(Thread):
         # If user has set parameters for ip and port use them as default
         default_ip = rospy.get_param("~pip", "127.0.0.1")
         default_port = rospy.get_param("~pport", 9559)
+        default_user = rospy.get_param("~user", "nao")
+        no_password = "no_password"
+        default_password = rospy.get_param("~password", no_password)
 
         # get connection from command line:
         from argparse import ArgumentParser
@@ -81,11 +87,55 @@ class NaoqiNode(Thread):
                           help="IP/hostname of parent broker. Default is 127.0.0.1.", metavar="IP")
         parser.add_argument("--pport", dest="pport", default=default_port, type=int,
                           help="port of parent broker. Default is 9559.", metavar="PORT")
+        ## qi uses qi.Application, instead of ALProxy
+        try:
+            ALProxy
+        except NameError as e:
+            parser.add_argument("--password", dest="password", default=default_password,
+                                help="the password of the robot.")
+            parser.add_argument("--user", dest="user", default=default_user,
+                                help="the user profile on the robot, nao by default.")
 
         import sys
         args, unknown = parser.parse_known_args(args=rospy.myargv(argv=sys.argv)[1:])
         self.pip = args.pip
         self.pport = args.pport
+
+        ## qi uses qi.Application, instead of ALProxy
+        try:
+            ALProxy
+        except NameError as e:
+            class Authenticator:
+                def __init__(self, username, password):
+                    self.username = username
+                    self.password = password
+
+                # This method is expected by libqi and must return a dictionary containing
+                # login information with the keys 'user' and 'token'.
+                def initialAuthData(self):
+                    return {'user': self.username, 'token': self.password}
+
+            class AuthenticatorFactory:
+                def __init__(self, username, password):
+                    self.username = username
+                    self.password = password
+
+                # This method is expected by libqi and must return an object with at least
+                # the `initialAuthData` method.
+                def newAuthenticator(self):
+                    return Authenticator(self.username, self.password)
+
+            if args.password == no_password:
+                protocol = "tcp://"
+            else:
+                protocol = "tcps://"
+            rospy.logwarn("connectiong to {}{}:{} with {}/{}".format(self.pip, self.pport, default_port, args.user, args.password))
+            self.app = qi.Application(sys.argv, url="tcp://{}:{}".format(self.pip, self.pport))
+            if protocol ==  "tcps://":
+                logins = (args.user, args.password)
+                factory = AuthenticatorFactory(*logins)
+                self.app.session.setClientAuthenticatorFactory(factory)
+            self.app.start()
 
         ## ROS stuff
         self.__stop_thread = False
@@ -137,6 +187,9 @@ class NaoqiNode(Thread):
         proxy = None
         try:
             proxy = ALProxy(name,self.pip,self.pport)
+        except NameError as e:
+            # ALProxy is not defined, use qi.Application
+            proxy = self.app.session.service(name)
         except RuntimeError as e:
             if warn:
                 rospy.logerr("Could not create Proxy to \"%s\". \nException message:\n%s",name, e)
