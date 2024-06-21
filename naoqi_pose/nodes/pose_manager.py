@@ -48,6 +48,11 @@ from std_msgs.msg import Bool
 from std_srvs.srv import Empty
 
 import xapparser
+try:
+    xapparser.getpostures
+except AttributeError:
+    # for Python3 to use getpostures()
+    from xapparser import xapparser
 
 class PoseManager():
     def __init__(self):
