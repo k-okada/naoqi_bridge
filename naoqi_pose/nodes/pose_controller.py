@@ -410,7 +410,7 @@ class PoseController(NaoqiNode):
             rospy.loginfo("JointAnglesWithSpeed action done")
 
     def checkJointsLen(self, goal_position):
-        if len(goal_position.name) == 1 and self.collectionSize.has_key(goal_position.name[0]):
+        if len(goal_position.name) == 1 and goal_position.name[0] in self.collectionSize:
             return len(goal_position.position) == self.collectionSize[goal_position.name[0]]
         else:
             return len(goal_position.position) ==  len(goal_position.name)
