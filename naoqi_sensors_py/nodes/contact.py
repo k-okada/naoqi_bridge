@@ -119,7 +119,7 @@ class NaoqiTactile(ALModule):
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
         try:
             self.broker = ALBroker("%sBroker" % self.moduleName, self.ip, self.port, self.pip, self.pport)
-        except RuntimeError,e:
+        except RuntimeError as e:
             print("Could not connect to NaoQi's main broker")
             exit(1)
         ALModule.__init__(self, self.moduleName)

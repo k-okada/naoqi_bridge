@@ -45,7 +45,7 @@ class NaoqiGazeAnalysis (NaoqiNode):
             self.gazeProxy.setTolerance(req.data)
             res.success = True
             return res
-        except RuntimeError, e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return res
 
@@ -54,7 +54,7 @@ class NaoqiGazeAnalysis (NaoqiNode):
             res = GetFloatResponse()
             res.data = self.gazeProxy.getTolerance()
             return res
-        except RuntimeError, e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return res
 

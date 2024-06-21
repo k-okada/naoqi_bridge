@@ -38,7 +38,7 @@ class NaoqiMic (ALModule, NaoqiNode):
         # Create a proxy to ALAudioDevice
         try:
             self.audioProxy = self.get_proxy("ALAudioDevice")
-        except Exception, e:
+        except Exception as e:
             rospy.logerr("Error when creating proxy on ALAudioDevice:")
             rospy.logerr(str(e))
             exit(1)
@@ -46,7 +46,7 @@ class NaoqiMic (ALModule, NaoqiNode):
         try:
             self.robotProxy = self.get_proxy("ALRobotModel")
             self.microVersion = self.robotProxy._getMicrophoneConfig()
-        except Exception, e:
+        except Exception as e:
             rospy.logwarn("Could not retrieve microphone version:")
             rospy.logwarn(str(e))
             rospy.logwarn("Microphone channel map might not be accurate.")

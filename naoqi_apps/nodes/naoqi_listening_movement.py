@@ -58,7 +58,7 @@ class NaoqiListeningMovement(NaoqiNode):
             self.listeningMovementProxy.setEnabled(req.data)
             res.success = True
             return res
-        except RuntimeError, e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return res
 
@@ -67,7 +67,7 @@ class NaoqiListeningMovement(NaoqiNode):
             res = TriggerResponse()
             res.success = self.listeningMovementProxy.isEnabled()
             return  res
-        except RuntimeError, e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return None
 

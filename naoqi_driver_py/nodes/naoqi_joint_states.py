@@ -135,7 +135,7 @@ class NaoqiJointStates(NaoqiNode):
                 else:
                     referenceData = positionData
                 stiffnessData = self.motionProxy.getStiffnesses('Body')
-            except RuntimeError, e:
+            except RuntimeError as e:
                 print "Error accessing ALMemory, exiting...\n"
                 print e
                 rospy.signal_shutdown("No NaoQI available anymore")

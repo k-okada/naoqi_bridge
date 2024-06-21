@@ -58,7 +58,7 @@ class NaoqiBackgroundMovement(NaoqiNode):
             self.backgroundMovementProxy.setEnabled(req.data)
             res.success = True
             return res
-        except RuntimeError, e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return res
 
@@ -67,7 +67,7 @@ class NaoqiBackgroundMovement(NaoqiNode):
             res = TriggerResponse()
             res.success = self.backgroundMovementProxy.isEnabled()
             return res
-        except RuntimeError, e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return None
 
