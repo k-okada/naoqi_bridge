@@ -226,7 +226,7 @@ class Mesh(Geometry):
             s = 1
         else:
             xyz = node.getAttribute('scale').split()
-            s = map(float, xyz)
+            s = list(map(float, xyz))
         return Mesh(fn, s)
 
     def to_xml(self, doc):
@@ -682,10 +682,10 @@ class Pose(object):
         pose = Pose()
         if node.hasAttribute("xyz"):
             xyz = node.getAttribute('xyz').split()
-            pose.position = array(map(float, xyz))
+            pose.position = array(list(map(float, xyz)))
         if node.hasAttribute("rpy"):
             rpy = node.getAttribute('rpy').split()
-            pose.rotation = array(map(float, rpy))
+            pose.rotation = array(list(map(float, rpy)))
         return pose
 
     def to_xml(self, doc):

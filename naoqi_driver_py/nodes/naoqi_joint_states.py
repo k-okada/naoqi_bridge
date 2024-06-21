@@ -205,7 +205,7 @@ class NaoqiJointStates(NaoqiNode):
             self.jointState.header.stamp = timestamp
             self.jointState.header.frame_id = self.base_frameID
             self.jointState.position = positionData
-            self.jointState.effort = map(lambda x, y: x - y, positionData, referenceData)
+            self.jointState.effort = list(map(lambda x, y: x - y, positionData, referenceData))
 
             # simulated model misses some joints, we need to fill:
             if (len(self.jointState.position) == 22):
