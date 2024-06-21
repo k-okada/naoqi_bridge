@@ -275,10 +275,19 @@ class PoseController(NaoqiNode):
             #If we haven't started the task already...
             if task_id is None:
                 # ...Start it in another thread (thanks to motionProxy.post)
-                task_id = self.motionProxy.post.angleInterpolation(names, angles, times, (goal.relative==0))
+                if hasattr(self.motionProxy, 'post'):
+                    task_id = self.motionProxy.post.angleInterpolation(names, angles, times, (goal.relative==0))
+                else:
+                    task_id = self.motionProxy.angleInterpolation(names, angles, times, (goal.relative==0))
 
             #Wait for a bit to complete, otherwise check we can keep running
-            running = self.motionProxy.wait(task_id, self.poll_rate)
+            print([names, angles, times])
+            print([task_id, self.poll_rate, goal.relative==0])
+            if hasattr(self.motionProxy, 'post'):
+                running = self.motionProxy.wait(task_id, self.poll_rate)
+            else:
+                running = self.motionProxy.wait(self.poll_rate)
+            print("running {}".format(running))
 
         # If still running at this point, stop the task
         if running and task_id:
@@ -317,10 +326,16 @@ class PoseController(NaoqiNode):
             #If we haven't started the task already...
             if task_id is None:
                 # ...Start it in another thread (thanks to motionProxy.post)
-                task_id = self.motionProxy.post.stiffnessInterpolation(names, angles, times)
+                if hasattr(self.motionProxy, 'post'):
+                    task_id = self.motionProxy.post.stiffnessInterpolation(names, angles, times)
+                else:
+                    task_id = self.motionProxy.stiffnessInterpolation(names, angles, times)
 
             #Wait for a bit to complete, otherwise check we can keep running
-            running = self.motionProxy.wait(task_id, self.poll_rate)
+            if hasattr(self.motionProxy, 'post'):
+                running = self.motionProxy.wait(task_id, self.poll_rate)
+            else:
+                running = self.motionProxy.wait(self.poll_rate)
 
         # If still running at this point, stop the task
         if running and task_id:
@@ -362,10 +377,16 @@ class PoseController(NaoqiNode):
             #If we haven't started the task already...
             if task_id is None:
                 # ...Start it in another thread (thanks to motionProxy.post)
-                task_id = self.motionProxy.post.angleInterpolationWithSpeed(names, angles, goal.joint_angles.speed)
+                if hasattr(self.motionProxy, 'post'):
+                    task_id = self.motionProxy.post.angleInterpolationWithSpeed(names, angles, goal.joint_angles.speed)
+                else:
+                    task_id = self.motionProxy.angleInterpolationWithSpeed(names, angles, goal.joint_angles.speed)
 
             #Wait for a bit to complete, otherwise check we can keep running
-            running = self.motionProxy.wait(task_id, self.poll_rate)
+            if hasattr(self.motionProxy, 'post'):
+                running = self.motionProxy.wait(task_id, self.poll_rate)
+            else:
+                running = self.motionProxy.wait(self.poll_rate)
 
         # If still running at this point, stop the task
         if running and task_id:
