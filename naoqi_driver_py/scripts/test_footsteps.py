@@ -68,5 +68,5 @@ if __name__ == '__main__':
 		footstep_client()
 		
 	except rospy.ROSInterruptException:
-  		print "program interrupted before completion"
+  		print("program interrupted before completion")
   		

@@ -74,7 +74,7 @@ def joint_angle_client():
 		client.wait_for_result()
 		rospy.loginfo("Getting results...")
 		result = client.get_result()	
-		print "Result:", ', '.join([str(n) for n in result.goal_position.position])
+		print("Result:", ', '.join([str(n) for n in result.goal_position.position]))
 		
 			
 		# multiple joints, multiple keypoints:
@@ -92,7 +92,7 @@ def joint_angle_client():
 		client.wait_for_result()
 		rospy.loginfo("Getting results...")
 		result = client.get_result()
-		print "Result:", ', '.join([str(n) for n in result.goal_position.position])
+		print("Result:", ', '.join([str(n) for n in result.goal_position.position]))
 		
 		
 		# multiple joints, single keypoint:
@@ -106,7 +106,7 @@ def joint_angle_client():
 		client.wait_for_result()
 		rospy.loginfo("Getting results...")
 		result = client.get_result()
-		print "Result:", ', '.join([str(n) for n in result.goal_position.position])
+		print("Result:", ', '.join([str(n) for n in result.goal_position.position]))
 		
 		
 		# Control of joints with relative speed
@@ -168,5 +168,5 @@ if __name__ == '__main__':
 		joint_angle_client()
 		
 	except rospy.ROSInterruptException:
-  		print "program interrupted before completion"
+  		print("program interrupted before completion")
 

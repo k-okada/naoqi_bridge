@@ -136,15 +136,15 @@ class NaoqiJointStates(NaoqiNode):
                     referenceData = positionData
                 stiffnessData = self.motionProxy.getStiffnesses('Body')
             except RuntimeError as e:
-                print "Error accessing ALMemory, exiting...\n"
-                print e
+                print("Error accessing ALMemory, exiting...\n")
+                print(e)
                 rospy.signal_shutdown("No NaoQI available anymore")
 
             self.torsoOdom.header.stamp = timestamp
             if len(odomData)==2:
                 odomData = odomData[1]
             elif len(odomData)!=6:
-                print "Error getting odom data"
+                print("Error getting odom data")
                 continue
 
             self.torsoOdom.pose.pose.position.x = odomData[0]
@@ -172,8 +172,8 @@ class NaoqiJointStates(NaoqiNode):
                     memData[i] = 0
 
             if len(memData) != len(self.dataNamesList):
-                print "memData length does not match expected length"
-                print memData
+                print("memData length does not match expected length")
+                print(memData)
                 continue
 
 

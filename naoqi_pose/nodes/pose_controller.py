@@ -433,8 +433,8 @@ class PoseController(NaoqiNode):
                     self.getLifeStatePub.publish(get_life_state_msg)
 
             except RuntimeError as e:
-                print "Error accessing ALMotion, ALRobotPosture, ALAutonomousLife, exiting...\n"
-                print e
+                print("Error accessing ALMotion, ALRobotPosture, ALAutonomousLife, exiting...\n")
+                print(e)
                 rospy.signal_shutdown("No NaoQI available anymore")
 
             self.rate.sleep()

@@ -46,7 +46,7 @@ for file in file_list:
         for node in dom.getElementsByTagName('init_from'):
             if node.firstChild.nodeValue.startswith('/'):
                 node.firstChild.nodeValue= '../../texture/' +str(node.firstChild.nodeValue[node.firstChild.nodeValue.rfind('/')+1:])
-        print 'processing ' + file
+        print('processing ' + file)
         f = open(os.path.join(directory, file),'w+')
         # Write the modified xml file
         f.write(dom.toxml())
