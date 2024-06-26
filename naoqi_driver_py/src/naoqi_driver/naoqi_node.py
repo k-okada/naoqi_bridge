@@ -129,8 +129,8 @@ class NaoqiNode(Thread):
                 protocol = "tcp://"
             else:
                 protocol = "tcps://"
-            rospy.logwarn("connectiong to {}{}:{} with {}/{}".format(self.pip, self.pport, default_port, args.user, args.password))
-            self.app = qi.Application(sys.argv, url="tcp://{}:{}".format(self.pip, self.pport))
+            rospy.logwarn("connectiong to {}{}:{} with {}/{}".format(protocol, self.pip, self.pport, args.user, args.password))
+            self.app = qi.Application(sys.argv, url="{}{}:{}".format(protocol, self.pip, self.pport))
             if protocol ==  "tcps://":
                 logins = (args.user, args.password)
                 factory = AuthenticatorFactory(*logins)
